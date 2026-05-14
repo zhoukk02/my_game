@@ -7,3 +7,5 @@ edition = "2024"
 bevy = { version = "0.18", features = ["2d"] }
 
 avian2d = { version = "0.5" }
+
+leafwing-input-manager = { version = "0.20" }
