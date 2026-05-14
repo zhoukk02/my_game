@@ -1,0 +1,9 @@
+[package]
+name = "my_game"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+bevy = { version = "0.18", features = ["2d"] }
+
+avian2d = { version = "0.5" }

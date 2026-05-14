@@ -1,0 +1,16 @@
+/target
+
+Cargo.lock
+
+.vscode/
+.idea/
+
+
+.DS_Store
+Thumbs.db
+
+*.tiled-session
+
+assets/textures/
+assets/sounds/
+docs/
