@@ -28,7 +28,7 @@ pub fn plugin(app: &mut App) {
         )
             .chain(),
     );
-
+    info!("[App] 模块加载完成");
     info!(
         "[App] 系统集顺序已配置：
         Update 逻辑层 Input → Action → Simulation，

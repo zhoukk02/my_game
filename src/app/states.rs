@@ -3,7 +3,7 @@ use bevy::prelude::*;
 /// 应用程序全局状态，控制游戏的主要生命周期阶段。
 ///
 /// 状态转换顺序为：`Loading` → `Building` → `Running`。
-#[derive(States, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[derive(States, Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum AppState {
     /// 资源加载阶段。
     ///

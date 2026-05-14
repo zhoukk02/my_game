@@ -4,7 +4,7 @@ use bevy::prelude::*;
 ///
 /// 各变体应按以下顺序执行：
 /// `Input` → `Action` → `Simulation`
-#[derive(SystemSet, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[derive(SystemSet, Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum LogicSet {
     /// 原始输入处理阶段。
     ///
@@ -26,7 +26,7 @@ pub enum LogicSet {
 ///
 /// 各变体应按以下顺序执行：
 /// `Sync` → `Animation` → `Visual` → `Ui` → `Audio`
-#[derive(SystemSet, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[derive(SystemSet, Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum RenderSet {
     /// 同步逻辑数据到渲染组件。
     ///
