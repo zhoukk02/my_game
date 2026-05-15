@@ -4,12 +4,11 @@ use bevy::prelude::*;
 ///
 /// 各变体应按以下顺序执行：
 /// `Input` → `Action` → `Simulation`
-#[derive(SystemSet, Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(SystemSet, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum LogicSet {
     /// 原始输入处理阶段。
     ///
     /// 读取 `leafwing` 的 `ActionState`，不修改游戏状态。
-    #[default]
     Input,
     /// 输入解析与状态转换阶段。
     ///
@@ -26,13 +25,12 @@ pub enum LogicSet {
 ///
 /// 各变体应按以下顺序执行：
 /// `Sync` → `Animation` → `Visual` → `Ui` → `Audio`
-#[derive(SystemSet, Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(SystemSet, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum RenderSet {
     /// 同步逻辑数据到渲染组件。
     ///
     /// 例如将 `Transform` 位置同步到 `Sprite` 或 `Mesh`。
     /// 此阶段必须最先执行，确保后续渲染使用最新数据。
-    #[default]
     Sync,
     /// 动画驱动阶段。
     ///

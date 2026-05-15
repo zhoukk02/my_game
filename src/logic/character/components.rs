@@ -4,7 +4,7 @@ use bevy::prelude::*;
 /// 标记组件：表示一个实体是可移动的角色（玩家、NPC、动物等）。
 ///
 /// 该组件不携带数据，仅用于标识，便于其他系统通过 `With<Character>` 进行查询。
-#[derive(Component, Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Component, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Character;
 
 /// 角色物理组件集合，用于快速生成具有标准物理属性的角色实体。

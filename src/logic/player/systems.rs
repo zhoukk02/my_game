@@ -3,6 +3,7 @@ use bevy::prelude::*;
 use leafwing_input_manager::prelude::*;
 
 use crate::input::actions::PlayerAction;
+use crate::input::bindings;
 use crate::logic::character::components::CharacterBundle;
 use crate::logic::player::state_machine;
 
@@ -14,7 +15,8 @@ pub fn spawn_player(mut commands: Commands) {
     let collider = Collider::circle(16.0);
     let character_bundle = CharacterBundle::new(collider);
     let state_machine = state_machine::default_state_machine();
-    commands.spawn((character_bundle, Player, Idle, state_machine));
+    let input_map = bindings::default_input_map();
+    commands.spawn((character_bundle, Player, Idle, input_map, state_machine));
     info!("[Logic/Player] 玩家实体已生成");
 }
 
@@ -32,8 +34,5 @@ pub fn move_system(
     let speed = 300.0;
     let axis = action_state.clamped_axis_pair(&PlayerAction::Move);
     velocity.0 = axis * speed;
-    debug!(
-        "[Logic/Player] 移动输入: {:?},  当前速度: {:?}",
-        axis, velocity.0
-    );
+    info!("[Logic/Player] Axis: {:?},  Velocity: {:?}", axis, velocity);
 }
