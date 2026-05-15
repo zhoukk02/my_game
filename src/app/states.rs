@@ -3,13 +3,12 @@ use bevy::prelude::*;
 /// 应用程序全局状态，控制游戏的主要生命周期阶段。
 ///
 /// 状态转换顺序为：`Loading` → `Building` → `Running`。
-#[derive(States, Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(States, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum AppState {
     /// 资源加载阶段。
     ///
     /// 使用 `bevy_asset_loader` 加载纹理、音频、配置文件等。
     /// 此阶段不应执行任何游戏逻辑。
-    #[default]
     Loading,
 
     /// 世界构建阶段。

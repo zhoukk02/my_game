@@ -6,7 +6,11 @@ use avian2d::prelude::*;
 use bevy::prelude::*;
 use bevy_ecs_tiled::prelude::*;
 
+use crate::logic::player::actions::Idle;
+use crate::logic::player::components::PlayerBundle;
 use crate::render::camera::components::MainCamera;
+
+use super::components::*;
 
 /// 设置游戏世界：加载 Tiled 地图世界（.world 文件）并配置物理后端。
 ///
@@ -52,4 +56,25 @@ pub fn extend_camera_entity(camera_created: On<Insert, MainCamera>, mut commands
     commands
         .entity(camera_created.entity)
         .insert(TiledParallaxCamera);
+}
+/// 当 `PlayerSpawnPoint` 组件被添加到实体时，在该出生点位置生成玩家实体。
+///
+/// # 触发时机
+/// 在地图加载或世界构建阶段，出生点实体被创建并添加 `PlayerSpawnPoint` 组件后触发。
+///
+/// # 行为说明
+/// 1. 获取出生点实体的 `Transform` 坐标。
+/// 2. 创建玩家实体（包含 `PlayerBundle`、`Idle` 初始状态及出生点变换）。
+pub fn spawn_player_at_spawn_point(
+    player_created: On<Add, PlayerSpawnPoint>,
+    spawn_point_query: Query<&Transform, With<PlayerSpawnPoint>>,
+    mut commands: Commands,
+) {
+    let Ok(transform) = spawn_point_query.get(player_created.entity) else {
+        return;
+    };
+    let collider = Collider::circle(16.0);
+    let player_bundle = PlayerBundle::new(collider);
+    commands.spawn((player_bundle, Idle, transform.clone()));
+    info!("[World] 玩家已在出生点生成");
 }

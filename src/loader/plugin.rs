@@ -14,10 +14,11 @@ pub fn plugin(app: &mut App) {
     app.add_loading_state(
         LoadingState::new(AppState::Loading)
             .continue_to_state(AppState::Building)
-            .load_collection::<DefinitionAssets>()
-            .load_collection::<SoundAssets>(),
+            .load_collection::<AsepriteAssets>()
+            .load_collection::<SoundAssets>()
+            .load_collection::<DefinitionAssets>(),
     );
-    let setups = (setup_defs, setup_sounds);
+    let setups = (setup_defs, setup_sounds, setup_aseprites);
     app.add_systems(
         OnEnter(AppState::Building),
         (setups.before(game_ready), game_ready).chain(),

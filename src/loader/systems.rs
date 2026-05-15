@@ -5,6 +5,14 @@ use crate::app::states::AppState;
 use super::assets::*;
 use super::manager::*;
 
+/// 切换应用状态到 `Running`。
+///
+/// 该函数应在所有资产数据（物品、音频、地图等）完成资源构建后调用。
+pub fn game_ready(mut next_state: ResMut<NextState<AppState>>) {
+    info!("[Loader] 资产加载与初始化完成，游戏已就绪");
+    next_state.set(AppState::Running);
+}
+
 /// 从已加载的物品定义资产构建 `ItemData` 资源。
 pub fn setup_defs(
     mut commands: Commands,
@@ -12,6 +20,10 @@ pub fn setup_defs(
     assets: Res<Assets<ItemDefinitionFile>>,
 ) {
     let Some(file) = assets.get(&handle.item_handle) else {
+        warn!(
+            "[Loader] 无法获取物品句柄 {:?} 对应的物品定义",
+            handle.item_handle
+        );
         return;
     };
     let mut count = 0;
@@ -35,7 +47,7 @@ pub fn setup_sounds(
     let mut manager = SoundData::new();
     for handle in handle.sound_handles.iter() {
         let Some(path) = asset_server.get_path(handle) else {
-            warn!("[Loader] 无法获取音频句柄的路径: {:?}", handle);
+            warn!("[Loader] 无法获取音频句柄 {:?} 的路径", handle);
             continue;
         };
         let file_name = path
@@ -52,10 +64,29 @@ pub fn setup_sounds(
     info!("[Loader] 音频数据加载完成，共 {} 项", count);
 }
 
-/// 切换应用状态到 `Running`。
-///
-/// 该函数应在所有资产数据（物品、音频、地图等）完成资源构建后调用。
-pub fn game_ready(mut next_state: ResMut<NextState<AppState>>) {
-    info!("[Loader] 资产加载与初始化完成，游戏已就绪");
-    next_state.set(AppState::Running);
+/// 从预加载的 Aseprite 句柄列表构建 `AsepriteData` 资源。
+pub fn setup_aseprites(
+    mut commands: Commands,
+    handle: Res<AsepriteAssets>,
+    asset_server: Res<AssetServer>,
+) {
+    let mut count = 0;
+    let mut manager = AsepriteData::new();
+    for handle in handle.aseprite_handles.iter() {
+        let Some(path) = asset_server.get_path(handle) else {
+            warn!("[Loader] 无法获取动画句柄 {:?} 的路径", handle);
+            continue;
+        };
+        let file_name = path
+            .path()
+            .file_name()
+            .unwrap()
+            .to_string_lossy()
+            .to_string();
+        manager.add(file_name, handle.clone());
+        count += 1;
+    }
+    commands.insert_resource(manager);
+    commands.remove_resource::<AsepriteAssets>();
+    info!("[Loader] 动画数据加载完成，共 {} 项", count);
 }

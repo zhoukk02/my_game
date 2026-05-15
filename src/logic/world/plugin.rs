@@ -20,6 +20,8 @@ pub fn plugin(app: &mut App) {
     ));
 
     app.add_systems(OnEnter(AppState::Building), setup_world);
+
     app.add_observer(extend_collider_entity);
     app.add_observer(extend_camera_entity);
+    app.add_observer(spawn_player_at_spawn_point);
 }

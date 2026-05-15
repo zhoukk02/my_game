@@ -10,7 +10,7 @@ use super::states::*;
 /// - 规定 `Update` 阶段逻辑层系统的执行顺序（`Input` → `Action` → `Simulation`）
 /// - 规定 `PostUpdate` 阶段渲染层系统的执行顺序（`Sync` → `Animation` → `Visual` → `Ui` → `Audio`）
 pub fn plugin(app: &mut App) {
-    app.init_state::<AppState>();
+    app.insert_state(AppState::Loading);
 
     app.configure_sets(
         Update,

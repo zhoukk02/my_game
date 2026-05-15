@@ -12,10 +12,9 @@ pub fn plugin(app: &mut App) {
         .add_message::<PauseResumed>()
         .add_message::<MenuClosed>();
 
-    app.add_systems(OnEnter(AppState::Running), spawn_player)
-        .add_systems(
-            Update,
-            ((move_system).in_set(LogicSet::Simulation),).run_if(in_state(AppState::Running)),
-        );
+    app.add_systems(
+        Update,
+        ((move_system).in_set(LogicSet::Simulation),).run_if(in_state(AppState::Running)),
+    );
     info!("[Logic/Player] 模块加载完成");
 }

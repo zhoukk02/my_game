@@ -11,7 +11,8 @@ Thumbs.db
 
 *.tiled-session
 
-assets/textures/
+assets/aseprites/
 assets/sounds/
+assets/textures/
 assets/tiled/
 docs/

@@ -89,4 +89,13 @@ impl Direction {
             }
         }
     }
+    /// 返回方向的 snake_case 字符串表示（小写）。
+    pub fn as_snake_case(&self) -> &'static str {
+        match self {
+            Direction::Up => "up",
+            Direction::Right => "right",
+            Direction::Down => "down",
+            Direction::Left => "left",
+        }
+    }
 }
