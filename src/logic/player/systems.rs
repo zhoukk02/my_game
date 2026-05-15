@@ -34,5 +34,5 @@ pub fn move_system(
     let speed = 300.0;
     let axis = action_state.clamped_axis_pair(&PlayerAction::Move);
     velocity.0 = axis * speed;
-    info!("[Logic/Player] Axis: {:?},  Velocity: {:?}", axis, velocity);
+    debug!("[Logic/Player] Axis: {:?},  Velocity: {:?}", axis, velocity);
 }
