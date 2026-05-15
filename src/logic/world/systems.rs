@@ -21,15 +21,30 @@ use super::components::*;
 ///
 /// # 注意
 /// `objects_layer_filter` 当前通过名字 `"collision"` 来识别碰撞图层。
-/// 需要注意 Tiled 中图层名的大小写（目前 FIXME 提示需要将名称转换为小写才能正确匹配）。
 pub fn setup_world(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn((
-        TilemapAnchor::BottomCenter,
+        // 地图锚点：左上角对齐世界坐标原点 (0,0,0)，便于按像素精确放置
+        TilemapAnchor::TopLeft,
+        // 各图层在 Z 轴上的间隔量，避免渲染时出现深度冲突（闪烁），此处设 100 确保分层清晰
+        TiledMapLayerZOffset(100.0),
+        // 渲染管线的自定义参数。
+        TilemapRenderSettings {
+            // 启用 Y 轴排序，让 Y 值较大的物体（靠下）显示在 Y 值较小的物体之上。
+            // 对于等距或横版游戏，可以正确实现前后遮挡效果。
+            y_sort: true,
+            // 每个渲染区块的尺寸（瓦片数）。此处为 32×32 瓦片。
+            // 由于瓦片尺寸为 16×16 像素，单个区块像素大小为 512×512。
+            render_chunk_size: UVec2::splat(32),
+        },
         TiledWorld(asset_server.load("tiled/my_game.world")),
+        // 配置 Tiled 地图的物理后端（Avian2D）
         TiledPhysicsSettings::<TiledPhysicsAvianBackend> {
-            // FIXME: 需要将名称转换为小写，否则无法正常识别
+            // 只从 Tiled 中名称为 "collision" 的对象层（Object Layer）生成碰撞体
+            // FIXME: 当前 Tiled 导出的图层名大小写敏感，必须手动确保名称全小写，否则无法识别
             objects_layer_filter: TiledFilter::Names(vec![String::from("collision")]),
+            // 忽略瓦片本身（tile 对象）的碰撞，避免为每个瓦片自动生成碰撞体
             tiles_objects_filter: TiledFilter::None,
+            // 其他物理参数使用默认值（例如碰撞体的密度、摩擦力等）
             ..default()
         },
     ));
@@ -63,7 +78,7 @@ pub fn extend_camera_entity(camera_created: On<Insert, MainCamera>, mut commands
 /// 在地图加载或世界构建阶段，出生点实体被创建并添加 `PlayerSpawnPoint` 组件后触发。
 ///
 /// # 行为说明
-/// 1. 获取出生点实体的 `Transform` 坐标。
+/// 1. 获取出生点实体的 `GlobalTransform` 坐标。
 /// 2. 创建玩家实体（包含 `PlayerBundle`、`Idle` 初始状态及出生点变换）。
 pub fn spawn_player_at_spawn_point(
     player_created: On<Add, PlayerSpawnPoint>,
@@ -71,10 +86,15 @@ pub fn spawn_player_at_spawn_point(
     mut commands: Commands,
 ) {
     let Ok(transform) = spawn_point_query.get(player_created.entity) else {
+        error!("[World] 未能获取玩家出生点信息, 无法生成玩家");
         return;
     };
+
     let collider = Collider::circle(16.0);
     let player_bundle = PlayerBundle::new(collider);
-    commands.spawn((player_bundle, Idle, transform.clone()));
-    info!("[World] 玩家已在出生点生成");
+    commands.spawn((transform.clone(), player_bundle, Idle));
+    info!(
+        "[World] 玩家已在出生点生成, 坐标 {:?}",
+        transform.translation
+    );
 }

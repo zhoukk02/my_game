@@ -30,6 +30,7 @@ pub mod systems {
         resource: Res<AsepriteData>,
     ) {
         let Some(handle) = resource.get("player.aseprite") else {
+            warn!("[Render/Animation] 未找到动画资源 'player.aseprite'，玩家动画无法加载");
             return;
         };
         commands.entity(player_created.entity).insert((

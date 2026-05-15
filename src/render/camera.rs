@@ -54,13 +54,13 @@ pub mod systems {
 
     /// 相机跟随系统：将主相机的位置同步到玩家实体的全局位置。
     ///
-    /// 通过查询 `MainCamera` 的 `Transform` 组件（可变）和玩家实体的 `GlobalTransform`，
+    /// 通过查询 `MainCamera` 的 `Transform` 组件（可变）和玩家实体的 `Transform`，
     /// 将相机的平移设置为玩家当前位置。
     pub fn camera_follow_player(
-        camera_quuery: Single<&mut Transform, With<MainCamera>>,
-        player_query: Single<&GlobalTransform, With<Player>>,
+        camera_quuery: Single<&mut Transform, (With<MainCamera>, Without<Player>)>,
+        player_query: Single<&Transform, (Changed<Transform>, With<Player>)>,
     ) {
         let mut transform = camera_quuery.into_inner();
-        transform.translation = player_query.into_inner().translation();
+        transform.translation = player_query.into_inner().translation;
     }
 }

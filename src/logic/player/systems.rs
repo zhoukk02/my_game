@@ -31,17 +31,18 @@ pub fn move_system(
             &ActionState<PlayerAction>,
             &mut LinearVelocity,
             &mut Direction,
+            &Transform,
         ),
         (With<Player>, With<Moving>),
     >,
 ) {
-    for (action_state, mut velocity, mut direction) in q_player.iter_mut() {
+    for (action_state, mut velocity, mut direction, transform) in q_player.iter_mut() {
         let axis = action_state.clamped_axis_pair(&PlayerAction::Move);
         velocity.0 = axis * PLAYER_BASE_SPEED;
         *direction = Direction::from(axis);
         debug!(
-            "[Logic/Player] 玩家移动中: (方向: {:?}, 速度: {:?})",
-            direction, velocity
+            "[Logic/Player] 玩家移动中: (坐标: {:?}, 方向: {:?}, 速度: {:?})",
+            transform.translation, direction, velocity
         );
     }
 }
