@@ -14,5 +14,6 @@ fn main() {
 
     app.add_plugins(input::plugin);
 
+    app.add_plugins((logic::player::plugin,));
     app.run();
 }

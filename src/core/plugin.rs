@@ -1,9 +1,5 @@
 use bevy::prelude::*;
 
-use super::components::*;
-
-pub fn plugin(app: &mut App) {
-    app.register_type::<Id>();
-
+pub fn plugin(_app: &mut App) {
     info!("[Core] 模块加载完成");
 }

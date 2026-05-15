@@ -12,18 +12,16 @@ pub enum PlayerAction {
     /// 移动（双轴输入）
     #[default]
     Move,
-    /// 冲刺
-    Dash,
-    /// 跳跃
-    Jump,
-    /// 交互（对话、拾取、调查）
-    Interact,
-    /// 使用当前选中的工具
-    UseTool,
-    /// 打开主菜单（背包、设置等）
-    OpenMenu,
     /// 打开地图
     OpenMap,
+    /// 交互（对话、拾取、调查）
+    Interact,
+    /// 跳跃
+    Jump,
+    /// 使用当前选中的工具
+    UseTool,
     /// 暂停游戏
     Pause,
+    /// 打开主菜单（背包、设置等）
+    OpenMenu,
 }
