@@ -1,7 +1,5 @@
 use bevy::prelude::*;
 
-use seldom_state::prelude::StateMachinePlugin;
-
 use crate::app::sets::LogicSet;
 use crate::app::states::AppState;
 
@@ -9,8 +7,6 @@ use super::messages::*;
 use super::systems::*;
 
 pub fn plugin(app: &mut App) {
-    app.add_plugins(StateMachinePlugin::default());
-
     app.add_message::<ActionCompleted>()
         .add_message::<MapClosed>()
         .add_message::<PauseResumed>()
