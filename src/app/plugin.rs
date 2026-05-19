@@ -1,14 +1,10 @@
 use bevy::prelude::*;
 
-use super::sets::*;
-use super::states::*;
+use super::{
+    sets::{LogicSet, RenderSet},
+    states::AppState,
+};
 
-/// 配置全局状态机与系统集顺序的插件函数。
-///
-/// 该函数负责：
-/// - 初始化 `AppState`（应用程序全局状态）
-/// - 规定 `Update` 阶段逻辑层系统的执行顺序（`Input` → `Action` → `Simulation`）
-/// - 规定 `PostUpdate` 阶段渲染层系统的执行顺序（`Sync` → `Animation` → `Visual` → `Ui` → `Audio`）
 pub fn plugin(app: &mut App) {
     app.insert_state(AppState::Loading);
 
@@ -28,7 +24,7 @@ pub fn plugin(app: &mut App) {
         )
             .chain(),
     );
-    info!("[App] 模块加载完成");
+    info!("[App] 加载完成");
     info!(
         "[App] 系统集顺序已配置：
         Update 逻辑层 Input → Action → Simulation，

@@ -1,22 +1,15 @@
+use bevy::prelude::*;
+
 use serde::Deserialize;
 
-/// 物品定义（从 RON 文件反序列化）。
-#[derive(Deserialize, Debug, Clone)]
-pub struct ItemDefinition {
-    /// 物品唯一标识符
-    pub id: u64,
-    /// 物品所属分类
-    pub category: ItemCategory,
-    /// 物品显示名称
+use crate::app::Id;
+
+#[derive(Asset, TypePath, Deserialize, Debug, Clone)]
+pub struct ItemData {
+    pub id: Id,
     pub name: String,
-    /// 物品描述文本
+    pub category: ItemCategory,
     pub description: String,
-    /// 单个堆叠的最大数量
-    pub max_stack: u32,
-    /// 购买价格（商店买入）
-    pub buy_price: u32,
-    /// 出售价格（卖给商店）
-    pub sell_price: u32,
 }
 
 /// 物品分类枚举。

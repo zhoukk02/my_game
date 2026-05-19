@@ -9,10 +9,5 @@ Cargo.lock
 .DS_Store
 Thumbs.db
 
-*.tiled-session
-
-assets/aseprites/
-assets/sounds/
-assets/textures/
-assets/tiled/
+assets/
 docs/

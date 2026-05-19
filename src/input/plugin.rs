@@ -5,5 +5,5 @@ use super::actions::*;
 
 pub fn plugin(app: &mut App) {
     app.add_plugins(InputManagerPlugin::<PlayerAction>::default());
-    info!("[Input] 模块加载完成");
+    info!("[Input] 加载完成");
 }

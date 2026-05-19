@@ -1,92 +1,46 @@
 use bevy::prelude::*;
 
-use crate::app::states::AppState;
+use crate::{
+    app::AppState,
+    data::{AudioData, ItemData, Store},
+};
 
-use super::assets::*;
-use super::manager::*;
+use super::assets::GameAsset;
 
-/// 切换应用状态到 `Running`。
-///
-/// 该函数应在所有资产数据（物品、音频、地图等）完成资源构建后调用。
-pub fn game_ready(mut next_state: ResMut<NextState<AppState>>) {
-    info!("[Loader] 资产加载与初始化完成，游戏已就绪");
+pub fn game_ready(
+    mut commands: Commands,
+    mut next_state: ResMut<NextState<AppState>>,
+) {
+    commands.remove_resource::<GameAsset>();
     next_state.set(AppState::Running);
 }
 
-/// 从已加载的物品定义资产构建 `ItemData` 资源。
-pub fn setup_defs(
+pub fn store_item(
     mut commands: Commands,
-    handle: Res<DefinitionAssets>,
-    assets: Res<Assets<ItemDefinitionFile>>,
+    collection: Res<GameAsset>,
+    assets: Res<Assets<ItemData>>,
 ) {
-    let Some(file) = assets.get(&handle.item_handle) else {
-        warn!(
-            "[Loader] 无法获取物品句柄 {:?} 对应的物品定义",
-            handle.item_handle
-        );
-        return;
-    };
-    let mut count = 0;
-    let mut manager = ItemData::new();
-    for kv in &file.data {
-        manager.add(kv.id, kv.clone());
-        count += 1;
+    let mut hm = Store::<ItemData>::new();
+    for handle in collection.items.iter() {
+        let Some(asset) = assets.get(handle) else {
+            return;
+        };
+        hm.add(asset.id, asset.clone());
     }
-    commands.insert_resource(manager);
-    commands.remove_resource::<DefinitionAssets>();
-    info!("[Loader] 物品定义加载完成，共 {} 项", count);
+    commands.insert_resource(hm);
 }
 
-/// 从预加载的音频句柄列表构建 `SoundData` 资源。
-pub fn setup_sounds(
+pub fn store_audio(
     mut commands: Commands,
-    handle: Res<SoundAssets>,
-    asset_server: Res<AssetServer>,
+    collection: Res<GameAsset>,
+    assets: Res<Assets<AudioData>>,
 ) {
-    let mut count = 0;
-    let mut manager = SoundData::new();
-    for handle in handle.sound_handles.iter() {
-        let Some(path) = asset_server.get_path(handle) else {
-            warn!("[Loader] 无法获取音频句柄 {:?} 的路径", handle);
-            continue;
+    let mut hm = Store::<AudioData>::new();
+    for handle in collection.audio.iter() {
+        let Some(asset) = assets.get(handle) else {
+            return;
         };
-        let file_name = path
-            .path()
-            .file_name()
-            .unwrap()
-            .to_string_lossy()
-            .to_string();
-        manager.add(file_name, handle.clone());
-        count += 1;
+        hm.add(asset.id, asset.clone());
     }
-    commands.insert_resource(manager);
-    commands.remove_resource::<SoundAssets>();
-    info!("[Loader] 音频数据加载完成，共 {} 项", count);
-}
-
-/// 从预加载的 Aseprite 句柄列表构建 `AsepriteData` 资源。
-pub fn setup_aseprites(
-    mut commands: Commands,
-    handle: Res<AsepriteAssets>,
-    asset_server: Res<AssetServer>,
-) {
-    let mut count = 0;
-    let mut manager = AsepriteData::new();
-    for handle in handle.aseprite_handles.iter() {
-        let Some(path) = asset_server.get_path(handle) else {
-            warn!("[Loader] 无法获取动画句柄 {:?} 的路径", handle);
-            continue;
-        };
-        let file_name = path
-            .path()
-            .file_name()
-            .unwrap()
-            .to_string_lossy()
-            .to_string();
-        manager.add(file_name, handle.clone());
-        count += 1;
-    }
-    commands.insert_resource(manager);
-    commands.remove_resource::<AsepriteAssets>();
-    info!("[Loader] 动画数据加载完成，共 {} 项", count);
+    commands.insert_resource(hm);
 }

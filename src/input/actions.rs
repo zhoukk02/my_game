@@ -5,7 +5,18 @@ use leafwing_input_manager::prelude::*;
 ///
 /// 与 `leafwing-input-manager` 配合，每个变体代表一种玩家意图，
 /// 可通过 `ActionState<PlayerAction>` 查询状态。
-#[derive(Actionlike, Reflect, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(
+    Actionlike,
+    Reflect,
+    Debug,
+    Clone,
+    Copy,
+    PartialEq,
+    Eq,
+    PartialOrd,
+    Ord,
+    Hash,
+)]
 pub enum PlayerAction {
     /// 移动（双轴输入）
     #[actionlike(DualAxis)]

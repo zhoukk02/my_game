@@ -3,24 +3,27 @@ use bevy_asset_loader::prelude::*;
 
 use bevy_common_assets::ron::RonAssetPlugin;
 
-use crate::app::states::AppState;
+use crate::{
+    app::AppState,
+    data::{AudioData, ItemData},
+};
 
-use super::assets::*;
-use super::systems::*;
+use super::{assets::GameAsset, systems};
 
 pub fn plugin(app: &mut App) {
-    app.add_plugins(RonAssetPlugin::<ItemDefinitionFile>::new(&["items.ron"]));
+    app.add_plugins(RonAssetPlugin::<ItemData>::new(&["items.ron"]));
+    app.add_plugins(RonAssetPlugin::<AudioData>::new(&["audio.ron"]));
 
     app.add_loading_state(
         LoadingState::new(AppState::Loading)
             .continue_to_state(AppState::Building)
-            .load_collection::<AsepriteAssets>()
-            .load_collection::<SoundAssets>()
-            .load_collection::<DefinitionAssets>(),
+            .load_collection::<GameAsset>(),
     );
-    let setups = (setup_defs, setup_sounds, setup_aseprites);
+
+    let setups = (systems::store_item, systems::store_audio);
     app.add_systems(
         OnEnter(AppState::Building),
-        (setups.before(game_ready), game_ready).chain(),
+        (systems::game_ready, setups.before(systems::game_ready)),
     );
+    info!("[Loader] 加载完成");
 }
